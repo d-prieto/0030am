@@ -1,0 +1,10 @@
+﻿I'm sorry, but errors were detected in your script. Please correct the
+errors listed below, and try again.
+
+
+File "game/script.rpy", line 167: Line is indented, but the preceding call statment statement does not expect a block. Please check this line's indentation.
+    call mensaje(br, "ahh si pu.")
+    ^
+
+Ren'Py Version: Ren'Py 7.4.11.2266
+Sun Jan 30 14:47:16 2022

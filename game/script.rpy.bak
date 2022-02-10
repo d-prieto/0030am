@@ -1,0 +1,189 @@
+﻿# Coloca el código de tu juego en este archivo.
+
+# Declara los personajes usados en el juego como en el ejemplo:
+
+define b = Character("Bruna", color="#554949")
+define a = Character("Aurora",color="#a1b69f")
+define au = "Aurora"
+define br = "Bruna"
+
+# Variables de la Historia
+default ignorarTelefonoUnaVez = False
+
+# El juego comienza aquí.
+
+label start:
+
+    # Muestra una imagen de fondo: Aquí se usa un marcador de posición por
+    # defecto. Es posible añadir un archivo en el directorio 'images' con el
+    # nombre "bg room.png" or "bg room.jpg" para que se muestre aquí.
+
+    scene bg habitacion osc1
+
+    # Muestra un personaje: Se usa un marcador de posición. Es posible
+    # reemplazarlo añadiendo un archivo llamado "eileen happy.png" al directorio
+    # 'images'.
+
+    # show eileen happy
+
+    # Presenta las líneas del diálogo.
+
+    "Que sueño, mejor me voy a acostar"
+
+    scene black
+    with dissolve
+
+    "zzzzz"
+    # aqui suena sonido
+    play sound "audio/Message tone.mp3"
+    scene bg habitacion osc2
+    with dissolve
+
+    "¿Qué suena a esta hora?"
+
+    menu:
+
+        "Acaba de sonar un mensaje ¿lo reviso?"
+
+        "A ver qué dice":
+            jump conversacionTelefono
+
+        "Nah, mañana lo miro que tengo mucho sueño":
+            jump suenaOtraVezElMensaje
+
+label suenaOtraVezElMensaje:
+    $ ignorarTelefonoUnaVez = True
+    scene bg habitacion osc1
+    with dissolve
+    "No voy a leerlo porque es muy tarde"
+    play sound "audio/Message tone.mp3"
+    pause 0.8
+    "Suena de nuevo otro mensaje"
+# Aquí debería ir un sonido
+    scene bg habitacion osc2
+    with dissolve
+    "Jumm, otro mensaje"
+    menu:
+        "Acaba de sonar OTRO mensaje ¿lo reviso?"
+
+        "Toca silenciar el celu o apagarlo":
+            jump ignorarloTodo
+
+        "Bueno... a ver qué dice":
+            jump conversacionTelefono
+
+label ignorarloTodo:
+    scene bg habitacion osc1
+    with dissolve
+    "Apago el celu y voy a dormir"
+    #(Final se le cae el celu en la cara)
+    scene bg final dormir
+    with dissolve
+    pause
+    "{b}Fin{/b}."
+    return
+
+label conversacionTelefono:
+
+
+    call phone_start(0)
+    #aquí hay una cosa fea y es que poniendo el scene puedo puedes poner el teléfono directamente.
+    #El teléfono está puesto 2 veces, una vez haciendo la animación integrada y luego con la mano como fondo
+    scene bg habitacion tel1
+    $ phone_too = " " #Si no se pone esta variable el programa falla.
+    call mensaje(br, "¿Aurora? Ping?Holo?")
+    if ignorarTelefonoUnaVez:
+        call mensaje(br, "¿hay alguien ahí?")
+    call mensaje("yo", "Hola Bruna…")
+    call mensaje(br, "¿Estás despierta?")
+    call mensaje("yo", "No, bueno ahora sí pero antes no.")
+    call mensaje(br, "La noche está super rara.")
+    call mensaje("yo", "Sí, yo también me di cuenta hay mucho silencio")
+    call mensaje(br, "A esta hora ya tienen la media fiesta aquí al lao")
+    call mensaje("yo", "Se fueron pal norte el otro día.")
+    call mensaje(br, "ahh si pu.")
+    call mensaje("yo", "Si pu")
+    call mensaje(br, "¿y qué estás haciendo?")
+    call mensaje("yo", "Durmiendo pu, tú lo sabes, jjajaaja ya dime ¿qué quieres?")
+    call mensaje(br, "Sabía que me ibas a contestar.")
+    call mensaje("yo", "Siempre te contesto.")
+    call mensaje(br, "Uta que tengo sueño, ya dime.")
+    call mensaje("yo", "Dime tú.")
+    call mensaje(br, "Pero si tú me hablaste.")
+    call mensaje("yo", "No, tú me mandaste el mensaje.")
+    call mensaje(br, "No, tú me mandaste el mensaje.")
+    call mensaje("yo", "No, sí, yo... ¿te mande el mensaje?")
+    call mensaje(br, "Que bueno que me contestaste.")
+    #primera elección
+    call screen phone_reply("Tengo mucho sueño","suenyo1","Quiero conversar","seguir1")
+
+label suenyo1:
+    call mensaje("yo", "Creo que tengo mucho sueño.")
+    call mensaje(br, "Creo que estoy soñando.")
+    call mensaje("yo", "Yo también, mejor me duermo.")
+    call mensaje(br, "¿se puede dormir dentro de un sueño?")
+    call mensaje("yo", "no se... ")
+    hide screen phone_message4
+    call mensaje(br, "Si una de las dos está despierta creo que sí.")
+
+    call phone_end(0)
+        #(Final se le cae el celu en la cara)
+    pause 0.2
+    play sound "audio/celucayendo.mp3"
+    scene bg final plop
+    pause
+    "{b}Fin{/b}."
+return
+
+label seguir1:
+    call mensaje("yo", "Yo también, pero quiero conversar.")
+    call mensaje(br, "Por eso te mandé el mensaje, hablemos.")
+    call mensaje("yo", "¿Qué?... pero que mierda")
+    call mensaje(br, "Te acordai cuando estaba en la playa y vino tremenda ola,")
+    call mensaje("yo", "me dio tremendas vueltas, quedé llena de arena.")
+    call mensaje(br, "Tenía arena hasta en el pelo.")
+    call mensaje("yo", "Igual después me volví a meter al agua.")
+    call mensaje(br, "Hacía frío igual que ahora")
+    #segunda elección
+    #Aquí bifurcación  si pregunta dónde está, se llega al final del dibujo con coneja mirando. Si pregunta qué sigue adelante.
+    call screen phone_reply("¿Dónde estás?","creepy1","¿Qué haces?","seguir2")
+
+label creepy1:
+#(imagen del final con sombra)
+    call mensaje("yo", "¿Dónde estás?")
+    call mensaje(br, "En la cama, con el celu y tú?")
+    call mensaje("yo", "En la cama con el celu y… me llego tu mensaje.")
+    call mensaje(br, "...")
+    call mensaje("yo", "¿Estás bien?")
+    call phone_end(0)
+    scene bg final creepy
+    pause
+    "{b}Fin{/b}."
+return
+
+label seguir2:
+#Aquí sigue si se escoge decir qué haces?
+    call mensaje("yo", "¿Qué haces?")
+    call mensaje(br, "Aburrirme… ser noctámbula es aburrido.")
+    call mensaje(br, "¿cómo vives de día?")
+    call mensaje("yo", "Me pregunto lo mismo contigo")
+    call mensaje(br, "Yo también me lo pregunto.")
+    call mensaje("yo", "Pero tu querías ser vampira.")
+    call mensaje(br, "Y tú bruja… estoy preocupada, tengo miedo.")
+    hide screen phone_message4
+    call mensaje(br, "Por eso no aguanté escribirte.")
+    call mensaje("yo", "¿Qué te preocupa?")
+    call mensaje(br, "¿Seguiremos siendo hermanas después de esto?")
+    call mensaje("yo", "Obvio")
+    hide screen phone_message4
+    call mensaje("yo", "No importa pa que lado nos hayamos ido. Igual nos complementamos")
+    call mensaje(br, "Siempre sabes que decir pa hacerme sentir mejor.")
+    call mensaje("yo", "Ajummmm si que tengo sueño… ¿hablamos mañana?")
+    call mensaje(br, "Te llamaré más temprano.")
+    call mensaje("yo", "Ánimos con tu nueva fase… ajumm")
+    call phone_end(0)
+
+    scene bg final hermanas
+    pause
+    "{b}Fin{/b}."
+return
